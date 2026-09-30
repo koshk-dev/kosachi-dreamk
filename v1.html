@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Кошачьи сны — пастельный</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #fdf2f8;
+    color: #4a2545;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  .blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .blob:nth-child(1) { width: 400px; height: 400px; background: #fbcfe8; top: -100px; left: -100px; }
+  .blob:nth-child(2) { width: 500px; height: 500px; background: #ddd6fe; top: 40%; right: -150px; }
+  .blob:nth-child(3) { width: 350px; height: 350px; background: #fce7f3; bottom: 0; left: 20%; }
+
+  header {
+    padding: 24px 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    position: sticky; top: 0;
+    background: rgba(253, 242, 248, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(217, 119, 151, 0.15);
+    z-index: 100;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .logo {
+    font-family: 'Caveat', cursive;
+    font-size: 34px;
+    font-weight: 700;
+    color: #be185d;
+  }
+  nav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+  nav a {
+    color: #9d5c72;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s;
+  }
+  nav a:hover {
+    background: #fce7f3;
+    color: #be185d;
+  }
+
+  .hero {
+    padding: 90px 40px 70px;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+  .hero .cat {
+    font-size: 100px;
+    display: block;
+    margin-bottom: 10px;
+    animation: wiggle 4s ease-in-out infinite;
+  }
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+  }
+  .hero h1 {
+    font-family: 'Caveat', cursive;
+    font-size: 80px;
+    color: #be185d;
+    margin-bottom: 8px;
+    line-height: 1;
+  }
+  .hero .sub {
+    font-size: 18px;
+    color: #9d5c72;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    font-weight: 600;
+  }
+  .hero p {
+    font-size: 18px;
+    color: #6b4457;
+    margin-bottom: 40px;
+    max-width: 580px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 36px;
+    background: linear-gradient(135deg, #ec4899, #a855f7);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 16px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 10px 30px rgba(236, 72, 153, 0.3);
+  }
+  .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(236, 72, 153, 0.5);
+  }
+  .btn-sm { padding: 10px 24px; font-size: 14px; }
+  .btn-outline {
+    background: #fff;
+    color: #be185d;
+    border: 2px solid #fbcfe8;
+    box-shadow: none;
+  }
+  .btn-outline:hover { box-shadow: 0 10px 30px rgba(236, 72, 153, 0.2); }
+
+  section {
+    padding: 70px 40px;
+    max-width: 1050px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+  .section-title {
+    font-family: 'Caveat', cursive;
+    font-size: 52px;
+    text-align: center;
+    color: #be185d;
+    margin-bottom: 12px;
+  }
+  .section-sub {
+    text-align: center;
+    color: #9d5c72;
+    margin-bottom: 45px;
+    max-width: 620px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 16px;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 22px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 28px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(190, 24, 93, 0.06);
+    border: 1px solid #fce7f3;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 40px rgba(190, 24, 93, 0.12);
+  }
+  .card-icon { font-size: 40px; margin-bottom: 14px; display: block; }
+  .card h3 { font-size: 20px; color: #be185d; margin-bottom: 10px; }
+  .card p { color: #7a5468; font-size: 15px; }
+
+  .anon {
+    display: flex; align-items: center; gap: 16px;
+    background: linear-gradient(135deg, #fce7f3, #ede9fe);
+    border-radius: 24px;
+    padding: 26px 32px;
+    max-width: 720px;
+    margin: 40px auto 0;
+    border: 1px solid #fbcfe8;
+  }
+  .anon .icon { font-size: 40px; }
+  .anon h4 { color: #be185d; font-size: 18px; margin-bottom: 4px; }
+  .anon p { color: #7a5468; font-size: 14px; }
+
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 18px;
+    margin-top: 30px;
+  }
+  .cat-box {
+    background: #fff;
+    border-radius: 22px;
+    padding: 26px;
+    text-align: center;
+    border: 1px solid #fce7f3;
+    transition: all 0.3s;
+  }
+  .cat-box:hover {
+    transform: translateY(-4px) scale(1.02);
+    border-color: #fbcfe8;
+    box-shadow: 0 12px 30px rgba(190, 24, 93, 0.1);
+  }
+  .cat-box .emoji { font-size: 38px; display: block; margin-bottom: 10px; }
+  .cat-box h4 { font-size: 17px; color: #be185d; margin-bottom: 6px; }
+  .cat-box p { font-size: 13px; color: #7a5468; }
+
+  .terms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .term {
+    background: #fff;
+    border-radius: 18px;
+    padding: 20px;
+    border: 1px solid #fce7f3;
+    transition: border-color 0.3s;
+  }
+  .term:hover { border-color: #fbcfe8; }
+  .term .name { font-weight: 800; color: #be185d; margin-bottom: 4px; }
+  .term .desc { font-size: 14px; color: #7a5468; }
+
+  .panel {
+    background: #fff;
+    border-radius: 28px;
+    padding: 40px;
+    max-width: 850px;
+    margin: 0 auto;
+    border: 1px solid #fce7f3;
+    box-shadow: 0 4px 20px rgba(190, 24, 93, 0.05);
+  }
+  .panel .divider {
+    text-align: center;
+    color: #f9a8d4;
+    margin: 18px 0;
+    letter-spacing: 6px;
+  }
+  .panel ul { list-style: none; padding: 0; }
+  .panel ul li {
+    padding: 12px 0;
+    border-bottom: 1px dashed #fce7f3;
+    display: flex;
+    gap: 12px;
+    color: #6b4457;
+  }
+  .panel ul li:last-child { border-bottom: none; }
+  .panel ul li::before {
+    content: '🌸';
+    flex-shrink: 0;
+  }
+  .panel ul li b { color: #be185d; }
+  .panel p { color: #6b4457; margin-bottom: 14px; }
+  .panel a {
+    color: #be185d;
+    text-decoration: none;
+    font-weight: 700;
+  }
+
+  .admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+  }
+  .admin-item {
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #fce7f3;
+    transition: border-color 0.3s;
+  }
+  .admin-item:hover { border-color: #fbcfe8; }
+  .admin-item .role { color: #9d5c72; font-size: 14px; }
+  .admin-item .tag { color: #be185d; font-weight: 800; }
+
+  .acc-item {
+    background: #fff;
+    border-radius: 18px;
+    border: 1px solid #fce7f3;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .acc-item:hover { border-color: #fbcfe8; }
+  .acc-header {
+    padding: 20px 26px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    color: #be185d;
+    user-select: none;
+  }
+  .acc-header .arrow { transition: transform 0.3s; color: #f9a8d4; }
+  .acc-item.active .arrow { transform: rotate(180deg); }
+  .acc-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s, padding 0.4s;
+    padding: 0 26px;
+    color: #6b4457;
+  }
+  .acc-item.active .acc-body {
+    max-height: 600px;
+    padding: 0 26px 22px;
+  }
+  .acc-body ul { list-style: none; padding: 0; margin-top: 8px; }
+  .acc-body li {
+    padding: 6px 0;
+    display: flex;
+    gap: 10px;
+    font-size: 14px;
+  }
+  .acc-body li::before { content: '•'; color: #ec4899; }
+
+  .big-block {
+    background: linear-gradient(135deg, #fce7f3, #ede9fe);
+    border-radius: 32px;
+    padding: 55px 40px;
+    text-align: center;
+    max-width: 900px;
+    margin: 30px auto;
+    border: 1px solid #fbcfe8;
+  }
+  .big-block h2 {
+    font-family: 'Caveat', cursive;
+    font-size: 52px;
+    color: #be185d;
+    margin-bottom: 12px;
+  }
+  .big-block p { color: #6b4457; margin-bottom: 26px; max-width: 620px; margin-left: auto; margin-right: auto; }
+  .big-lists {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+    text-align: left;
+  }
+  .big-list {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    padding: 24px;
+  }
+  .big-list h3 { color: #be185d; font-size: 18px; margin-bottom: 12px; }
+  .big-list ul { list-style: none; padding: 0; }
+  .big-list li {
+    padding: 8px 0;
+    color: #6b4457;
+    font-size: 14px;
+    display: flex;
+    gap: 10px;
+    border-bottom: 1px dashed #fce7f3;
+  }
+  .big-list li:last-child { border-bottom: none; }
+  .big-list li::before { content: '🐾'; }
+
+  .cta {
+    text-align: center;
+    background: linear-gradient(135deg, #ec4899, #a855f7);
+    border-radius: 36px;
+    padding: 70px 40px;
+    max-width: 900px;
+    margin: 40px auto;
+    color: #fff;
+  }
+  .cta h2 {
+    font-family: 'Caveat', cursive;
+    font-size: 56px;
+    margin-bottom: 12px;
+  }
+  .cta p { margin-bottom: 26px; opacity: 0.9; }
+  .cta .btn {
+    background: #fff;
+    color: #be185d;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  }
+  .cta .btn:hover { box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25); }
+  .cta .btn-outline {
+    background: transparent;
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+  }
+
+  footer {
+    text-align: center;
+    padding: 40px;
+    color: #9d5c72;
+    font-size: 14px;
+    position: relative;
+    z-index: 2;
+  }
+  footer a { color: #be185d; text-decoration: none; font-weight: 700; }
+
+  @media (max-width: 700px) {
+    .hero h1 { font-size: 56px; }
+    .hero .cat { font-size: 70px; }
+    header { padding: 16px 20px; }
+    nav a { padding: 6px 10px; font-size: 12px; }
+    section { padding: 50px 20px; }
+    .section-title { font-size: 40px; }
+    .panel { padding: 26px 20px; }
+    .big-block { padding: 40px 20px; }
+    .cta h2 { font-size: 42px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="blob"></div>
+<div class="blob"></div>
+<div class="blob"></div>
+
+<header>
+  <div class="logo">🐱 Кошачьи сны</div>
+  <nav>
+    <a href="#about">О боте</a>
+    <a href="#categories">Категории</a>
+    <a href="#terms">Термины</a>
+    <a href="#rules">Правила</a>
+    <a href="#admin-list">Админы</a>
+    <a href="#admin-rules">Админ-правила</a>
+    <a href="#more">Ещё</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <span class="cat">😺</span>
+  <h1>Кошачьи сны</h1>
+  <div class="sub">поддержка и общение</div>
+  <p>Уютный бот, который всегда рядом. Найдёт тебе собеседника, выслушает и подарит тепло, даже если за окном глубокая ночь.</p>
+  <a href="https://t.me/caatdreams_bot" class="btn" target="_blank">✈️ Открыть в Telegram</a>
+</section>
+
+<section id="about">
+  <h2 class="section-title">О боте</h2>
+  <p class="section-sub">«Кошачьи сны» — это бот для поддержки и общения. Ты выбираешь категорию, бот соединяет тебя с подходящим админом, и вы общаетесь.</p>
+  <div class="cards">
+    <div class="card"><span class="card-icon">🌙</span><h3>Атмосфера уюта</h3><p>Общение в мягком, дружелюбном тоне. Здесь не грубят и всегда поддержат.</p></div>
+    <div class="card"><span class="card-icon">💜</span><h3>Поддержка 24/7</h3><p>Бот не спит и не устаёт. Ответит даже в 3 часа ночи, когда все спят.</p></div>
+    <div class="card"><span class="card-icon">🐾</span><h3>Просто и легко</h3><p>Никаких сложных команд. Просто выбери, с кем хочешь поговорить.</p></div>
+  </div>
+  <div class="anon">
+    <span class="icon">🔒</span>
+    <div>
+      <h4>Полная анонимность</h4>
+      <p>Мы не видим твой юзернейм, профиль и не знаем, где ты живёшь. Переписка остаётся только у тебя, у админа и у проверяющих.</p>
+    </div>
+  </div>
+</section>
+
+<section id="categories">
+  <h2 class="section-title">Категории общения</h2>
+  <p class="section-sub">Выбери, с каким админом ты хочешь поговорить.</p>
+  <div class="cat-grid">
+    <div class="cat-box"><span class="emoji">💕</span><h4>Флирт</h4><p>Лёгкое, игривое общение — без пошлости.</p></div>
+    <div class="cat-box"><span class="emoji">💬</span><h4>Общение</h4><p>Просто поговорить обо всём.</p></div>
+    <div class="cat-box"><span class="emoji">💙</span><h4>Поддержка</h4><p>Когда тяжело — тебя выслушают.</p></div>
+    <div class="cat-box"><span class="emoji">🌟</span><h4>Универсал</h4><p>Умеет всё: поддержит, поболтает, пошутит.</p></div>
+  </div>
+</section>
+
+<section id="terms">
+  <h2 class="section-title">Термины для новеньких</h2>
+  <p class="section-sub">Если ты здесь впервые — вот что означают слова.</p>
+  <div class="terms-grid">
+    <div class="term"><div class="name">Котик</div><div class="desc">Ласковое слово для наших админов и проверяющих.</div></div>
+    <div class="term"><div class="name">Рест</div><div class="desc">Перерыв админа. Он отдыхает и не может отвечать.</div></div>
+    <div class="term"><div class="name">ВЛД</div><div class="desc">Владелец. Главный человек в проекте.</div></div>
+    <div class="term"><div class="name">ПЗ</div><div class="desc">Пользователь, который пользуется ботом.</div></div>
+    <div class="term"><div class="name">Проверяющие</div><div class="desc">Те, кто следит за порядком и проверяет жалобы.</div></div>
+    <div class="term"><div class="name">Анкета</div><div class="desc">Заявка на вступление в команду админов.</div></div>
+  </div>
+</section>
+
+<section id="rules">
+  <h2 class="section-title">Правила</h2>
+  <p class="section-sub">Просим соблюдать правила — так всем будет уютнее.</p>
+  <div class="panel">
+    <p>Здесь каждый может ненадолго забыть о дневной суете. Но даже в самых тёплых снах есть свои правила.</p>
+    <div class="divider">• • •</div>
+    <ul>
+      <li><b>01. Уважайте друг друга.</b> Без оскорблений, грубости и провокаций.</li>
+      <li><b>02. Не выпрашивайте личные данные администрации.</b></li>
+      <li><b>03. Флирт только по согласию обеих сторон.</b> Отношения и встречи с админами запрещены.</li>
+      <li><b>04. 18+, шок-контент — запрещены.</b></li>
+      <li><b>05. Не спамьте и не мешайте работе бота.</b></li>
+      <li><b>06. Не распространяйте переписки без разрешения.</b></li>
+      <li><b>07. Сменить сессию общения можно не более 3 раз.</b></li>
+    </ul>
+    <div class="divider">• • •</div>
+    <p style="text-align:center;color:#be185d;font-weight:700;">Соблюдайте правила и берегите друг друга ♡</p>
+  </div>
+</section>
+
+<section id="rests">
+  <h2 class="section-title">Ресты</h2>
+  <p class="section-sub">«Где мой админ? Почему он не отвечает?»</p>
+  <div class="panel">
+    <p>🐾 У админов тоже бывают дела, и им нужно иногда отдохнуть.</p>
+    <p>🌙 <b>Рест</b> — период, когда администратор не может общаться. На данный момент в ресте: <b>пока никого нету</b>.</p>
+  </div>
+</section>
+
+<section id="admin-list">
+  <h2 class="section-title">Наша администрация</h2>
+  <p class="section-sub">Вот кто заботится о «Кошачьих снах».</p>
+  <div class="panel">
+    <p style="color:#be185d;font-weight:700;text-align:center;margin-bottom:16px;">Старшие котята</p>
+    <div class="admin-grid">
+      <div class="admin-item"><span class="role">Владелец</span><span class="tag">#сигарета</span></div>
+      <div class="admin-item"><span class="role">Совлад</span><span class="tag">#ласка</span></div>
+      <div class="admin-item"><span class="role">ЗамВЛД</span><span class="tag">#лирика</span></div>
+    </div>
+    <div class="divider">• • •</div>
+    <p style="color:#be185d;font-weight:700;text-align:center;margin-bottom:16px;">Котки (по категориям)</p>
+    <div class="admin-grid">
+      <div class="admin-item"><span class="role">Универсал</span><span class="tag">#сигарета</span></div>
+      <div class="admin-item"><span class="role">Универсал</span><span class="tag">#ласка</span></div>
+      <div class="admin-item"><span class="role">Универсал</span><span class="tag">#лирика</span></div>
+    </div>
+    <div class="divider">• • •</div>
+    <p style="color:#be185d;font-weight:700;text-align:center;margin-bottom:16px;">Коты</p>
+    <div class="admin-grid">
+      <div class="admin-item"><span class="role">Общение</span><span class="tag">#немец</span></div>
+      <div class="admin-item"><span class="role">Универсал</span><span class="tag">#директор</span></div>
+    </div>
+    <div class="divider">• • •</div>
+    <p style="text-align:center;color:#9d5c72;margin:20px 0;">Свободные слоты: Поддержка, Куратор, Монтажёр.</p>
+    <p style="text-align:center;"><a href="https://t.me/catdreams_anketa_bot" class="btn btn-sm" target="_blank">📝 Заполнить анкету</a></p>
+  </div>
+</section>
+
+<section id="more">
+  <h2 class="section-title">Ещё</h2>
+  <p class="section-sub">Полезные ссылки.</p>
+  <div class="panel">
+    <p style="text-align:center;"><a href="https://t.me/boost/caat_dreams" target="_blank">🚀 Буст канала</a></p>
+    <div class="divider">• • •</div>
+    <div class="admin-grid">
+      <a href="https://t.me/caat_dreams" target="_blank" class="admin-item" style="text-decoration:none;"><span class="role">Канал</span><span class="tag">→</span></a>
+      <a href="https://t.me/caatdreams_bot" target="_blank" class="admin-item" style="text-decoration:none;"><span class="role">Бот</span><span class="tag">→</span></a>
+      <a href="https://t.me/catdreams_anketa_bot" target="_blank" class="admin-item" style="text-decoration:none;"><span class="role">Анкетница</span><span class="tag">→</span></a>
+      <a href="https://t.me/caat_dreams/12" target="_blank" class="admin-item" style="text-decoration:none;"><span class="role">Отзывы</span><span class="tag">→</span></a>
+      <a href="https://t.me/caat_dreams/10" target="_blank" class="admin-item" style="text-decoration:none;"><span class="role">Котики</span><span class="tag">→</span></a>
+      <a href="https://t.me/caat_dreams/15" target="_blank" class="admin-item" style="text-decoration:none;"><span class="role">Проверки</span><span class="tag">→</span></a>
+    </div>
+  </div>
+</section>
+
+<section id="admin">
+  <div class="big-block">
+    <h2>Работа админом</h2>
+    <p>Хочешь стать частью команды? Мы ищем добрых и ответственных людей.</p>
+    <div class="big-lists">
+      <div class="big-list">
+        <h3>📋 Условия</h3>
+        <ul>
+          <li>Возраст от 14 лет</li>
+          <li>Фото паспорта для подтверждения</li>
+          <li>Вежливость и терпение</li>
+          <li>Ответственность</li>
+          <li>Активность</li>
+        </ul>
+      </div>
+      <div class="big-list">
+        <h3>🎁 Что получишь</h3>
+        <ul>
+          <li>Дружную команду</li>
+          <li>Опыт общения</li>
+          <li>Рост внутри проекта</li>
+          <li>Уютную атмосферу</li>
+        </ul>
+      </div>
+    </div>
+    <p style="margin-top:30px;"><a href="https://t.me/catdreams_anketa_bot" class="btn" target="_blank">📝 Заполнить анкету</a></p>
+  </div>
+</section>
+
+<section id="admin-rules">
+  <h2 class="section-title">Правила администрации</h2>
+  <p class="section-sub">Каждый админ обязан ознакомиться и соблюдать.</p>
+  <div class="acc-item"><div class="acc-header"><span>🖤 1. Общие положения</span><span class="arrow">▼</span></div><div class="acc-body"><ul><li>После принятия каждый админ обязан ознакомиться с правилами.</li><li>Незнание не освобождает от ответственности.</li><li>Спорные ситуации — с ВЛД/старшей администрацией.</li></ul></div></div>
+  <div class="acc-item"><div class="acc-header"><span>💬 2. Общение с ПЗ</span><span class="arrow">▼</span></div><div class="acc-body"><ul><li>Уважение к каждому ПЗ.</li><li>Не провоцировать конфликты.</li><li>Не обесценивать чувства.</li><li>Не заставлять продолжать разговор.</li></ul></div></div>
+  <div class="acc-item"><div class="acc-header"><span>🔒 3. Конфиденциальность</span><span class="arrow">▼</span></div><div class="acc-body"><ul><li>Не разглашать личную информацию ПЗ.</li><li>Не передавать переписки третьим лицам.</li><li>Не раскрывать свои личные данные.</li></ul></div></div>
+  <div class="acc-item"><div class="acc-header"><span>💕 4. Личные отношения</span><span class="arrow">▼</span></div><div class="acc-body"><ul><li>Отношения админ ↔ ПЗ запрещены.</li><li>Флирт — только в категории «Флирт».</li><li>Если некомфортно — прекратить и сообщить старшим.</li></ul></div></div>
+  <div class="acc-item"><div class="acc-header"><span>⚙️ 5. Работа администратора</span><span class="arrow">▼</span></div><div class="acc-body"><ul><li>Не оставлять обращения без внимания.</li><li>Обращаться к старшим при сомнениях.</li><li>Не выдавать себя за других.</li><li>Не использовать полномочия в личных целях.</li></ul></div></div>
+  <div class="acc-item"><div class="acc-header"><span>🚫 6. Запрещено</span><span class="arrow">▼</span></div><div class="acc-body"><ul><li>18+ и сексуализированный контент.</li><li>Угрозы, травля, унижения.</li><li>Распространение личных данных.</li><li>Реклама без разрешения.</li><li>Мошенничество.</li><li>Злоупотребление полномочиями.</li></ul></div></div>
+  <div class="acc-item"><div class="acc-header"><span>🤝 7. Внутри администрации</span><span class="arrow">▼</span></div><div class="acc-body"><ul><li>Уважать всех админов.</li><li>Конфликты — внутри команды.</li><li>Не присваивать чужую работу.</li><li>Соблюдать решения ВЛД.</li></ul></div></div>
+  <div class="acc-item"><div class="acc-header"><span>🌙 8. Отсутствие и рест</span><span class="arrow">▼</span></div><div class="acc-body"><ul><li>Предупреждать о ресте заранее.</li><li>Не пропадать без предупреждения.</li><li>Сообщать ВЛД, если не можешь работать.</li></ul></div></div>
+  <div class="acc-item"><div class="acc-header"><span>⚠️ 9. Нарушения</span><span class="arrow">▼</span></div><div class="acc-body"><ul><li>Предупреждение.</li><li>Выговор.</li><li>Временное ограничение полномочий.</li><li>Снятие с должности.</li><li>Исключение.</li></ul></div></div>
+  <div class="acc-item"><div class="acc-header"><span>💜 10. Главное</span><span class="arrow">▼</span></div><div class="acc-body"><p>Ответственность, адекватное общение, конфиденциальность, уважение.</p></div></div>
+</section>
+
+<div class="cta">
+  <h2>Готовы окунуться в сон?</h2>
+  <p>Откройте бота и выберите, с кем хотите поговорить.</p>
+  <a href="https://t.me/caatdreams_bot" class="btn" target="_blank">✈️ Перейти в бота</a>
+  <a href="https://t.me/caat_dreams" class="btn btn-outline" target="_blank">📢 Наш канал</a>
+</div>
+
+<footer>
+  © 2026 Кошачьи сны · Сделано с 💜 и 🐾 · Поддержка: <a href="https://t.me/Phantomkru" target="_blank">@Phantomkru</a>
+</footer>
+
+<script>
+  document.querySelectorAll('.acc-header').forEach(h => {
+    h.addEventListener('click', () => {
+      const item = h.parentElement;
+      const wasActive = item.classList.contains('active');
+      document.querySelectorAll('.acc-item').forEach(i => i.classList.remove('active'));
+      if (!wasActive) item.classList.add('active');
+    });
+  });
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) t.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
